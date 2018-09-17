@@ -1,7 +1,7 @@
 const router = require('koa-router')();
-const mongoose = require('mongoose');
 const userInfo = require("../database/schema/userModel");
-var jwt = require("jsonwebtoken");  //jwt 
+const jwt = require("jsonwebtoken");  //jwt 
+let config = require('../config/configJWT'); //jwt 秘钥
 router.prefix('/users')
 
 router.post('/reg', async(ctx, next) => {
@@ -44,12 +44,20 @@ router.post('/login',async(ctx)=>{
     await newUser.comparePassword(password,findUser.password).then(isMatch=>{
         // ctx.session.username = "张三";
         // console.log(ctx.session.username);
-        let token = jwt.sign({ _id: user._id }, config.secrets.session, {
-            expiresIn: 60 * 60 * 5
-            });
-        ctx.body = {code:200,message:isMatch,objId:findUser._id};
+        let token = jwt.sign({name: userName}, config, {
+            expiresIn: 60*60
+          });
+        // console.log(token);
+        ctx.body = {code:200,message:isMatch,objId:findUser._id,token:token};
     }).catch(err=>{
         ctx.body = {code:500,message:err};
+    })
+});
+router.post('/status', async(ctx, next) => {
+    let token = ctx.request.header.authorization.split('Bearer ')[1];
+    console.log(token);
+    jwt.verify(token, config,{},(err,decoded)=>{
+        console.log(err,decoded);
     })
 })
 
