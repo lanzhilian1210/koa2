@@ -45,7 +45,7 @@ router.post('/login',async(ctx)=>{
         // ctx.session.username = "张三";
         // console.log(ctx.session.username);
         let token = jwt.sign({name: userName}, config, {
-            expiresIn: 60*60
+            expiresIn:60*60
           });
         // console.log(token);
         ctx.body = {code:200,message:isMatch,objId:findUser._id,token:token};
@@ -53,11 +53,19 @@ router.post('/login',async(ctx)=>{
         ctx.body = {code:500,message:err};
     })
 });
-router.post('/status', async(ctx, next) => {
+router.post('/status', async(ctx,next) => {
     let token = ctx.request.header.authorization.split('Bearer ')[1];
-    console.log(token);
     jwt.verify(token, config,{},(err,decoded)=>{
-        console.log(err,decoded);
+        
+        console.log(decoded.exp,Date.now());
+        if(err) {
+            ctx.body = {code:10011,message:'过期了'}
+        } 
+        else if(decoded.exp*100 < Date.now()) {
+            ctx.body = {code:10010,message:'过期了'}  // token过期
+        } else {
+            ctx.body = {code:200,message:decoded.name}
+        }
     })
 })
 
