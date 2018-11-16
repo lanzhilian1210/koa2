@@ -47,7 +47,7 @@ router.post('/login',async(ctx)=>{
         // ctx.session.username = "张三";
         // console.log(ctx.session.username);
         let token = jwt.sign({name: userName}, config, {
-            expiresIn:60
+            expiresIn:60*60*50
           });
         // console.log(token);
         ctx.body = {code:200,message:isMatch,objId:findUser._id,token:token};
@@ -55,7 +55,8 @@ router.post('/login',async(ctx)=>{
         ctx.body = {code:500,message:err};
     })
 });
-
+ 
+// 验证时间是否过期,然后做相应处理
 router.get('/status', async(ctx,next) => {
     let token = ctx.request.header.authorization.split('Bearer ')[1];
     jwt.verify(token, config,{},(err,decoded)=>{
