@@ -6,6 +6,7 @@ router.prefix('/users')
 router.get('/abc',async(ctx,next)=>{
     ctx.body = '213'
 });
+
 router.post('/reg', async(ctx, next) => {
     let newUser = new userInfo(ctx.request.body);
     let userName = ctx.request.body.userName;
