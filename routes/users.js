@@ -68,7 +68,7 @@ router.get('/status', async(ctx,next) => {
         else if(decoded.exp*1000 < Date.now()) {
             ctx.body = {code:10010,message:'过期了'}  // token过期
         } else {
-            ctx.body = {code:200,message:decoded.name}
+            ctx.body = {code:200,message:decoded.name,tip:'未过期'}
         }
     })
 })
