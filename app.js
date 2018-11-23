@@ -6,8 +6,10 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const cors = require('koa2-cors');
-const index = require('./routes/index') // 初始化
+const list = require('./routes/list') // 列表
 const users = require('./routes/users') // user表
+const classes = require('./routes/class') // class表
+const student = require('./routes/student') // class表
 
 const {connect} = require('./database/init.js');
 (async () =>{
@@ -38,9 +40,10 @@ app.use(async (ctx, next) => {
 })
 
 // routes 路由
-app.use(index.routes(), index.allowedMethods())
+app.use(list.routes(), list.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
-
+app.use(classes.routes(), classes.allowedMethods())
+app.use(student.routes(), student.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
