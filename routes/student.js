@@ -1,6 +1,5 @@
 const router = require('koa-router')();
 const studentInfo = require("../database/schema/studentModel");
-const classInfo = require("../database/schema/classModel");
 router.prefix('/student')
 router.get('/abc',async(ctx,next)=>{
     ctx.body = '213'

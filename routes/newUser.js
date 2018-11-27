@@ -1,15 +1,11 @@
 const router = require('koa-router')();
 const newUserInfo = require("../database/schema/newUserModel");
-const session = require('koa-session');
 router.prefix('/newUser')
 router.get('/abc',async(ctx,next)=>{
-    ctx.body = '213'
+    ctx.body = '213';
 });
 // 注册
 router.post('/signUp', async(ctx,err) => {
-    
-    ctx.session.name = '123';
-    console.log(ctx.session);
     let newUser = new newUserInfo(ctx.request.body);
     let newUserName = newUser.userName;
     let findOldUser = await newUserInfo.findOne({'userName':newUserName});
@@ -36,6 +32,26 @@ router.post('/signUp', async(ctx,err) => {
     }
 
 })
+router.post('/signIn',async(ctx)=>{
+    let loginUser = ctx.request.body;
+    let userName = loginUser.userName;
+    let password = loginUser.password;
+    let findUser = await newUserInfo.findOne({userName:userName}).exec();
+    if(findUser == null) {
+        ctx.body = {
+            code:500,
+            message:'账户不存在'
+        };
+        return ;
+    };
+    let newUser = new newUserInfo();
+    await newUser.comparePassword(password,findUser.password).then(isMatch=>{
+        ctx.session.username = findUser.userName;
+        ctx.body = {code:200,message:isMatch,objId:findUser._id};
+    }).catch(err=>{
+        ctx.body = {code:500,message:err};
+    })
+});
 
 router.get('/sess',async(ctx,err)=>{
     ctx.body = 123;
