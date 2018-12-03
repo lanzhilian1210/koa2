@@ -5,14 +5,16 @@ var pdftext = require('pdf-textstring');
 
 var fs = require('fs');
 var path = require('path');
-var filePath = path.join(__dirname, '../public/uploads/20181130/1543548463254.pdf');
+var filePath = path.join(__dirname, '../public/uploads/2018123/1.txt');
 let file = '';
 fs.readFile(filePath, 'utf8', function(err, data) {
   if(err) throw err;
   // data默认是一个Buffer对象，里面保存的就是一个一个的字节，(理解为字节数组)
   // 把Buffer对象转换为字符串，调用toString()方法
- file = data;
+ file = data.toString('utf8');
+ console.log(file)
 })
+
   // extract(filePath, function (err, pages) {
   //   if (err) {
   //     console.dir(err,3)
