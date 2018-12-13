@@ -2,7 +2,9 @@
 const mongoose = require('mongoose');    //引入Mongoose
 const Schema = mongoose.Schema;         //声明Schema
 var classSchema = new mongoose.Schema({
-    name: String,
+    title: String,
+    content: String,
+    objId:String,
     meta: {
         createAt: {
             type: Date,

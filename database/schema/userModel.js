@@ -7,7 +7,6 @@ const SALT_WORK_FACTOR = 10;
 //创建我们的用户Schema
 const userSchema = new Schema({
     UserId: ObjectId,
-    mobile: { type: String, default: "" },
     userName:{type:String},
     password: String,
     createAt: {type:Date,default:Date.now()},

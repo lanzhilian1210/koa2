@@ -1,20 +1,14 @@
 const router = require('koa-router')();
 var officegen = require('officegen');  //生成word
 var extract = require('pdf-text-extract')   // pdf 读取
-var pdftext = require('pdf-textstring'); 
-
+var iconv = require('iconv-lite');
 var fs = require('fs');
 var path = require('path');
 var filePath = path.join(__dirname, '../public/uploads/2018123/1.txt');
-let file = '';
-fs.readFile(filePath, 'utf8', function(err, data) {
-  if(err) throw err;
-  // data默认是一个Buffer对象，里面保存的就是一个一个的字节，(理解为字节数组)
-  // 把Buffer对象转换为字符串，调用toString()方法
- file = data.toString('utf8');
- console.log(file)
-})
-
+var fileStr = fs.readFileSync(filePath, {encoding:'binary'});
+var buf = new Buffer(fileStr, 'binary');
+var str = iconv.decode(buf, 'GBK');
+// console.log(str);
   // extract(filePath, function (err, pages) {
   //   if (err) {
   //     console.dir(err,3)
@@ -22,6 +16,8 @@ fs.readFile(filePath, 'utf8', function(err, data) {
   //   }
   //   console.dir(pages,4)
   // })
+
+//   生成docx
 var docx = officegen ({
     'type': 'docx'
 });
@@ -39,7 +35,7 @@ docx.on ( 'error', function ( err ) {
 router.get('/file',(ctx)=> {
     ctx.set('Content-Type','application/vnd.openxmlformats-officedocument.presentationml.presentation',)
     ctx.set('Content-disposition','attachment; filename=surprise.docx')
-    ctx.body = file.toString();
+    ctx.body = str;
 });
 
 
